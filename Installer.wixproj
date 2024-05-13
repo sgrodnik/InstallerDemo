@@ -1,6 +1,7 @@
 <Project Sdk="WixToolset.Sdk/4.0.4">
 
   <PropertyGroup>
+    <DebugType>none</DebugType>
     <SuppressIces>ICE38;ICE64;ICE91</SuppressIces>
     <OutputPath>bin</OutputPath>
     <OutputName>MyInstallerFileName</OutputName>
@@ -54,6 +55,24 @@
     <Message Text="EnableFullVersion = $(EnableFullVersion), %(AssemblyVersion.Version)" />
     <Copy SourceFiles="bin\$(OutputName).msi" DestinationFiles="bin\$(NewName)" />
     <Delete Files=".\bin\$(OutputName).msi" />
+  </Target>
+
+
+  <Target Name="CustomAfterBuild-CopyToSharedLocation" AfterTargets="CustomAfterBuild-RenameOutputToVersion">
+    <PropertyGroup>
+      <DestFolder>O:\0223ET\Seccio\SECCIÓN ET\080. BIM\PROGRAMACION\PLUG-IN Revit\Test folder\</DestFolder>
+    </PropertyGroup>
+    <ItemGroup>
+      <FilesToMove Include="$(DestFolder)*.msi"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(DestFolder)old" />
+    <Delete Files="@(FilesToMove)">
+      <Output
+        TaskParameter="DeletedFiles"
+        ItemName="FilesDeleted"/>
+    </Delete>
+    <Copy SourceFiles="bin\$(NewName)" DestinationFiles="$(DestFolder)$(NewName)" />
+    <Copy SourceFiles="..\CHANGELOG.md" DestinationFiles="$(DestFolder)CHANGELOG.md" />
   </Target>
 
 </Project>
