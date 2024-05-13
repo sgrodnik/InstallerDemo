@@ -3,7 +3,7 @@
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
   <Package Manufacturer="Sener" Name="ExampleProductName"
-      UpgradeCode="00000000-0000-0000-0000-000000000000"
+      UpgradeCode="824c4c9c-417a-420b-a496-61a5b99ea7f2"
       Scope="perUser"
       Version="!(bind.FileVersion.R23dll)">
 
@@ -16,17 +16,22 @@
     <WixVariable Id="WixUIBannerBmp" Value="bannerTop.png" />
 
     <StandardDirectory Id="AppDataFolder">
-        <Directory Name="Autodesk\Revit\Addins\2023"               Id="Addins2023" />
-        <Directory Name="Autodesk\Revit\Addins\2023\!(bind.Property.Manufacturer)\!(bind.Property.ProductName)" Id="Bin2023" />
+      <?foreach YY in 19;20;21;22;23 ?>
+        <Directory Name="Autodesk\Revit\Addins\20$(YY)"               Id="Addins20$(YY)" />
+        <Directory Name="Autodesk\Revit\Addins\20$(YY)\!(bind.Property.Manufacturer)\!(bind.Property.ProductName)" Id="Bin20$(YY)" />
+      <?endforeach?>
     </StandardDirectory >
 
     <Feature Id="Main" >
-      <Component Directory="Addins2023"> <File Source="..\BIMTools\BimToolsR23.addin" />                   <RemoveFolder Id="Addins2023" On="uninstall"/> </Component>
-      <Component Directory="Bin2023"> <File Source="..\BIMTools\bin\release\BimToolsR23.dll" Id="R23dll"/> <RemoveFolder Id="Bin2023"    On="uninstall"/> </Component>
-      <Component Directory="Bin2023"> <File Source="..\BIMTools\bin\release\BimToolsR23.pdb" /> </Component>
-      <Component Directory="Bin2023"> <File Source="..\BIMTools\bin\release\EPPlus.dll"         /> </Component>
-      <Component Directory="Bin2023"> <File Source="..\BIMTools\bin\release\MdXaml.dll"         /> </Component>
-      <Component Directory="Bin2023"> <File Source="..\BIMTools\bin\release\MdXaml.Plugins.dll" /> </Component>
+      <?foreach YY in 19;20;21;22;23 ?>
+        <Component Directory="Addins20$(YY)"> <File Source="..\BIMTools\BimToolsR$(YY).addin" />                      <RemoveFolder Id="Addins20$(YY)" On="uninstall"/> </Component>
+        <Component Directory="Bin20$(YY)"> <File Source="..\BIMTools\bin\release\BimToolsR$(YY).dll" Id="R$(YY)dll"/> <RemoveFolder Id="Bin20$(YY)"    On="uninstall"/> </Component>
+
+        <Component Directory="Bin20$(YY)"> <File Source="..\BIMTools\bin\release\BimToolsR$(YY).pdb" /> </Component>
+        <Component Directory="Bin20$(YY)"> <File Source="..\BIMTools\bin\release\EPPlus.dll"         /> </Component>
+        <Component Directory="Bin20$(YY)"> <File Source="..\BIMTools\bin\release\MdXaml.dll"         /> </Component>
+        <Component Directory="Bin20$(YY)"> <File Source="..\BIMTools\bin\release\MdXaml.Plugins.dll" /> </Component>
+      <?endforeach?>
     </Feature>
 
   </Package>

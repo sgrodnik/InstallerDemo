@@ -5,11 +5,31 @@
     <OutputPath>bin</OutputPath>
     <OutputName>MyInstallerFileName</OutputName>
     <EnableFullVersion>false</EnableFullVersion>
+    <SkipRevitBuild>false</SkipRevitBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="WixToolset.UI.wixext" Version="4.0.4" />
   </ItemGroup>
+
+
+  <Target Name="CustomBeforeBuild-BuildRevitDlls" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <ProjectPath>$(ProjectDir)../BIMTools/BIMTools.csproj</ProjectPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ConfsToBuild Include="R19" />
+      <ConfsToBuild Include="R20" />
+      <ConfsToBuild Include="R21" />
+      <ConfsToBuild Include="R22" />
+      <ConfsToBuild Include="R23" />
+    </ItemGroup>
+
+    <Exec Condition=" '$(SkipRevitBuild)' != 'true' "
+      Command="&quot;msbuild&quot; &quot;$(ProjectPath)&quot; -nologo -noconsolelogger --restore -property:Configuration=%(ConfsToBuild.Identity)"
+      ContinueOnError="false"/>
+  </Target>
 
 
   <Target Name="CustomAfterBuild-RenameOutputToVersion" AfterTargets="AfterBuild">
