@@ -1,0 +1,9 @@
+<Project Sdk="WixToolset.Sdk/4.0.4">
+
+  <PropertyGroup>
+    <SuppressIces>ICE38;ICE64;ICE91</SuppressIces>
+    <OutputPath>bin</OutputPath>
+    <OutputName>MyInstallerFileName</OutputName>
+  </PropertyGroup>
+
+</Project>
