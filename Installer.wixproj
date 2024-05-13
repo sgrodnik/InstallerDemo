@@ -4,10 +4,36 @@
     <SuppressIces>ICE38;ICE64;ICE91</SuppressIces>
     <OutputPath>bin</OutputPath>
     <OutputName>MyInstallerFileName</OutputName>
+    <EnableFullVersion>false</EnableFullVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="WixToolset.UI.wixext" Version="4.0.4" />
   </ItemGroup>
+
+
+  <Target Name="CustomAfterBuild-RenameOutputToVersion" AfterTargets="AfterBuild">
+    <GetAssemblyIdentity AssemblyFiles="..\BIMTools\bin\release\BimToolsR23.dll">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyVersion"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+        <Pattern>(\d+)\.(\d+)</Pattern>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(EnableFullVersion)' == 'true' ">
+        <Pattern>(\d+)\.(\d+).(\d+).(\d+)</Pattern>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <In>%(AssemblyVersion.Version)</In>
+        <VersionInfo>$([System.Text.RegularExpressions.Regex]::Match($(In), $(Pattern)))</VersionInfo>
+        <Date>$([System.DateTime]::Now.ToString("yy-MM-dd"))</Date>
+        <NewName>$(OutputName) v$(VersionInfo) $(Date).msi</NewName>
+    </PropertyGroup>
+
+    <Message Text="EnableFullVersion = $(EnableFullVersion), %(AssemblyVersion.Version)" />
+    <Copy SourceFiles="bin\$(OutputName).msi" DestinationFiles="bin\$(NewName)" />
+    <Delete Files=".\bin\$(OutputName).msi" />
+  </Target>
 
 </Project>
