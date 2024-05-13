@@ -6,4 +6,8 @@
     <OutputName>MyInstallerFileName</OutputName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="4.0.4" />
+  </ItemGroup>
+
 </Project>
